@@ -6,14 +6,22 @@ const setTimeoutPromise = util.promisify(setTimeout);
   const page = await browser.newPage()
   await page.goto('https://www.skipthedishes.com/vancouver/restaurants')
 
-  const restaurants = await page.$$eval('a[data-restaurant-open="1"] .truncated-name', divs => {
+  const restaurantNames = await page.$$eval('a[data-restaurant-open="1"] .truncated-name', divs => {
     return divs.map(div => div.innerHTML)
   })
-  // restaurants.forEach(console.log)
+  const restaurantUrls = await page.$$eval('a[data-restaurant-open="1"]', elements => {
+    return elements.map(element => element.href)
+  })
+  const restaurantIndex = Math.floor(Math.random() * restaurantNames.length) + 1  
 
-  const restaurantIndex = Math.floor(Math.random() * restaurants.length) + 1  
+  console.log(restaurantNames[restaurantIndex])
+  const url = restaurantUrls[restaurantIndex]
+  console.log(url)
+  
+  // Let's go to this restaurant
+  await page.goto(url)
+  await page.screenshot({path: 'restaurantpage.png'});
 
-  console.log(restaurants[restaurantIndex])
 
   await browser.close()
 })()
