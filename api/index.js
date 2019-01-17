@@ -3,7 +3,7 @@ const util = require('util')
 const setTimeoutPromise = util.promisify(setTimeout)
 require('dotenv').config()
 
-const {FB_USER, FB_PASS} = process.env
+const {FB_USER, FB_PASS, STD_USER, STD_PASS} = process.env
 
 const city = 'vancouver'
 
@@ -24,11 +24,27 @@ const facebookLogin = async page => {
   await page.waitForNavigation()
 }
 
-const skipTheDishesLogin = async page => {
+const skipTheDishesLoginFb = async page => {
+  const STD_PAGE = {
+    facebookButton: '.btn-facebook',
+  }
   await page.goto('https://www.skipthedishes.com/user/login')
-  await page.waitForSelector('.btn-facebook')
-  await page.click('.btn-facebook')
-  // await page.waitForNavigation()
+  await page.waitForSelector(STD_PAGE.facebookButton)
+  await page.click(STD_PAGE.facebookButton)
+  await page.waitForNavigation()
+}
+
+const skipTheDishesLogin = async page => {
+  const STD_PAGE = {
+    loginField: '#email',
+    passField: '#password',
+    loginButton: '#submit-btn',
+  }
+  await page.goto('https://www.skipthedishes.com/user/login')
+  await page.waitForSelector(STD_PAGE.loginField)
+  await page.type(STD_PAGE.loginField, STD_USER)
+  await page.type(STD_PAGE.passField, STD_PASS)
+  await page.click(STD_PAGE.loginButton)
 }
 
 const goToRestaurantPage = async page => {
@@ -57,10 +73,13 @@ const goToRestaurantPage = async page => {
   const page = await browser.newPage()
 
   // Login to Facebook account
-  await facebookLogin(page)
+  // await facebookLogin(page)
 
   // Go to skip the dishes and login with facebook
-  await skipTheDishesLogin(page)
+  // await skipTheDishesLoginFb(page)
+
+  // Login with SkipTheDishes username/password
+  skipTheDishesLogin(page)
 
   // Go to Vancouver SKD page and get a restaurant thats open
   // await goToRestaurantPage(page)
