@@ -7,7 +7,7 @@ const {FB_USER, FB_PASS} = process.env
 
 const city = 'vancouver'
 
-const facebookLogin = async (page) => {
+const facebookLogin = async page => {
   const FB_PAGE = {
     loginField: '#email',
     passField: '#pass',
@@ -67,6 +67,8 @@ const goToRestaurantPage = async page => {
   
   // Take a screenshot
   await page.screenshot({path: './screenshot.png'})
+  console.log('created screenshot.')
+  console.log('ended on page:', page.url())
   
   await browser.close()
 })()
