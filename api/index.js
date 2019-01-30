@@ -57,7 +57,7 @@ const goToRestaurantPage = async page => {
   const restaurantUrls = await page.$$eval('a[data-restaurant-open="1"]', elements => {
     return elements.map(element => element.href)
   })
-  const restaurantIndex = Math.floor(Math.random() * restaurantNames.length) + 1  
+  const restaurantIndex = Math.floor(Math.random() * restaurantNames.length) + 1
 
   console.log(restaurantNames[restaurantIndex])
   const url = restaurantUrls[restaurantIndex]
@@ -79,15 +79,18 @@ const goToRestaurantPage = async page => {
   // await skipTheDishesLoginFb(page)
 
   // Login with SkipTheDishes username/password
-  skipTheDishesLogin(page)
+  // await skipTheDishesLogin(page)
+  await skipTheDishesLogin(page)
+  
+  await page.waitFor(4000)
 
   // Go to Vancouver SKD page and get a restaurant thats open
-  // await goToRestaurantPage(page)
-  
+  await goToRestaurantPage(page)
+
   // Take a screenshot
   await page.screenshot({path: './screenshot.png'})
   console.log('created screenshot.')
   console.log('ended on page:', page.url())
-  
+
   await browser.close()
 })()
